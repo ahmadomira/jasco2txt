@@ -26,7 +26,7 @@ fi
 
 # Activate the environment and install additional packages
 echo "Activating environment and installing packages..."
-source $(conda info --base)/etc/profile.d/conda.sh
+source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate jasco2txt
 
 # Install packages from requirements.txt (in case of any updates)

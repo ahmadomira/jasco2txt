@@ -1,4 +1,5 @@
 numpy>=1.21.0
 pyinstaller>=6.0.0
 pillow>=10.0.0
+olefile>=0.46
 pathlib2>=2.3.6; python_version < "3.4"

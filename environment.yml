@@ -5,6 +5,7 @@ channels:
 dependencies:
   - python=3.11
   - pip
+  - olefile>=0.46
   - pip:
     - numpy>=1.21.0
     - pyinstaller>=6.0.0
