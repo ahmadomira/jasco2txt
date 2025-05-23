@@ -1,0 +1,80 @@
+name: Build and Release Jasco2TXT Converter
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            python-version: '3.11'
+            artifact-name: 'macos-executable'
+          - os: ubuntu-latest
+            python-version: '3.11'
+            artifact-name: 'linux-executable'
+          - os: windows-latest
+            python-version: '3.11'
+            artifact-name: 'windows-executable'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+    
+    - name: Build with PyInstaller
+      run: pyinstaller --clean -y --distpath ./dist --workpath ./build jasco2txt_gui.spec
+
+    - name: Zip artifact (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        Compress-Archive -Path 'dist\*' -DestinationPath "${{ matrix.os }}-executable.zip"
+      shell: pwsh
+  
+    - name: Zip artifact (Unix)
+      if: runner.os != 'Windows'
+      run: |
+        cd dist
+        zip -r ../${{ matrix.os }}-executable.zip ./*
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.os }}-executable
+        path: ./${{ matrix.os }}-executable.zip
+
+  publish_release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./artifacts
+
+    - name: Create release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        files: ./artifacts/**/*.zip
+        token: ${{ secrets.GITHUB_TOKEN }}

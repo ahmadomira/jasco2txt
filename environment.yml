@@ -1,0 +1,11 @@
+name: jasco2txt
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    - numpy>=1.21.0
+    - pyinstaller>=6.0.0
+    - pillow>=10.0.0
