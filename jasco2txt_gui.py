@@ -7,13 +7,10 @@ A simple TKinter application for converting Jasco spectroscopy files to text for
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, scrolledtext
 import os
-import sys
 import threading
-import traceback
 from pathlib import Path
-import json
 import struct
-import numpy as np
+
 
 
 class JascoConverter:
