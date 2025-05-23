@@ -77,4 +77,5 @@ jobs:
         tag_name: ${{ github.ref_name }}
         name: Release ${{ github.ref_name }}
         files: ./artifacts/**/*.zip
+        draft: false
         token: ${{ secrets.GITHUB_TOKEN }}
