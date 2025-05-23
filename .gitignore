@@ -24,6 +24,7 @@ MANIFEST
 # PyInstaller
 *.manifest
 *.spec.bak
+# Note: .spec files are included as they're needed for building
 
 # Virtual environments
 venv/
